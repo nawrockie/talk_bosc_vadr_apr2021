@@ -61,85 +61,203 @@ National Library of Medicine \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}
 \begin{center}
-\Large{\textbf{GenBank indexers handle incoming sequence submissions}
+\large{\textbf{GenBank indexers handle incoming sequence submissions}}
 \end{center}
 
-\includegraphics[width=9in]{figs/genbank-2019-title}
-
-\includegraphics[width=9in]{figs/genbank-2019-table1}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\vfill
-\end{slide}
-\begin{slide}
-\begin{center}
-\Large{\textbf{VADR: automated validation and annotation of common
-    sequence submissions}
-\end{center}
-
-\includegraphics[width=9in]{figs/genbank-2019-title}
-
-\includegraphics[width=9in]{figs/genbank-2019-table1}
-
+\center{\includegraphics[width=9in]{figs/spheres-submission-schematic-1}}
 
 \vfill
 \end{slide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}
 \begin{center}
-\textbf{Manual NCBI GenBank indexing does not scale}
+\includegraphics[width=10in]{figs/vadr-title-paper}
 
-\includegraphics[width=7in]{figs/submission-schematic-1}
-
-\vfill
-\end{center}
-\end{slide}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{slide}
-\begin{center}
-\textbf{Submissions can be grouped and analyzed based on sequence type}
-\end{center}
-
-\small
 \begin{itemize}
-\item Many submissions are of \emph{marker genes}, used to
-  characterize environments (microbiome, soil), which are
-  automatically analyzed by BLAST or specialized tools.
-%\item Submissions with zero errors automatically enter database
-%  (``foosh'')
-%\item Submissions with errors can be corrected by submitter or are manually reviewed by an indexer
+\item general tool for reference-based annotation of viral sequences
+\item used for dengue virus and norovirus submissions since 2018
+\item used for SARS-CoV-2 submissions since March 2020 
 \end{itemize}
 
-\medskip
-
-\begin{center}
-\begin{tabular}{lrr}
- marker gene/                    &  2018    & total \\
- sequence type                   &  \# seqs & \# seqs   \\ \hline
-& & \\
-%\textcolor{red}{16S rRNA}        & \textcolor{red}{333,121}  & \textcolor{red}{8,015,297} & \textcolor{red}{18,262,402} & \textcolor{red}{BLAST}\footnote{TLS submissions now processed with Ribosensor} \\
-%16S rRNA                        & 333,121  & 8,015,297 & 18,262,402 & BLAST$^{*}$ \\
-16S rRNA                        & 333,121  & 8,015,297 \\
-& & \\                    
- COX1                            & 35,517  & 1,349,957  \\
-& & \\                    
- 23S rRNA                        & 74,287  &   275,014  \\
-& & \\
- ITS1                            & 27,279  &   359,380  \\
-& & \\                    
- ITS2                            & 24,144  &   184,515  \\
-& & \\                    
- ITS1+ITS2                       & 26,734  &   445,721  \\
-& & \\                    
- Influenza                       & 74,868  &   665,464  \\
-\end{tabular}
-\end{center}
 \vfill
-%\tiny \flushleft{$\dagger$ TLS: Targeted Locus Study, currently only 16S submissions with $>=$ 2500 seqs, handled by Anji Johnston}
-%\tiny \flushleft{$\ddagger$ TLS submissions now processed with ribosensor}
+\end{center}
 \end{slide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\large{\textbf{VADR assists GenBank indexers}}
+\large{\textbf{Each sequence \textcolor{green}{PASSes} or \textcolor{red}{FAILs}}}
+\end{center}
+
+\center{\includegraphics[width=9in]{figs/spheres-submission-schematic-2}}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\large{\textbf{Indexers decide fate of \textcolor{red}{FAILing} sequences}}
+\end{center}
+
+\center{\includegraphics[width=9in]{figs/spheres-submission-schematic-3}}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\large{\textbf{Some sequences are sent directly back to submitter with
+    error reports}}
+\end{center}
+
+\center{\includegraphics[width=9in]{figs/spheres-submission-schematic-4}}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\large{\textbf{VADR builds a reference model of a RefSeq and its features}}
+\end{center}
+
+\includegraphics[width=10.5in]{figs/dengue-features}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+%\textbf{\texttt{v-annotate.pl} annotates each sequence using its
+\textbf{VADR validates and annotates each input sequence \\ using its 
+  best-matching model}
+
+\begin{itemize}
+\item For each sequence $S$:
+\small
+\begin{enumerate}
+\item \textbf{Classification}: compare $S$ to all models to find best matching model $M$
+\item \textbf{Coverage determination}: search $M$ against $S$ to find 'hits'
+\item \textbf{Alignment}: align $S$ to $M$ and map features from $M$ to $S$
+\item \textbf{Protein validation}: compare predicted CDS in $S$ to proteins
+  from $M$ using BLASTX
+\end{enumerate}
+\end{itemize}
+
+\emph{Different types of alerts are identified and reported at each stage}
+
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=9.5in]{figs/v-annotate-stage1-1}
+
+\end{center}
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=9.5in]{figs/v-annotate-stage1-2}
+
+\end{center}
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=9.5in]{figs/v-annotate-stage1-2}
+
+\includegraphics[width=10.5in]{figs/ss-class-alert-list}
+
+\end{center}
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=10.5in]{figs/v-annotate-stage2-1}
+
+\end{center}
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=10.5in]{figs/v-annotate-stage2-2}
+\includegraphics[width=10in]{figs/ss-coverage-alert-list}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=10.5in]{figs/v-annotate-stage3-1}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=10.5in]{figs/v-annotate-stage3-2}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=10.5in]{figs/v-annotate-stage3-3}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=10.5in]{figs/v-annotate-stage3-4}
+\includegraphics[width=10.5in]{figs/ss-alignment-alert-list}
+
+\end{center}
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=10.5in]{figs/v-annotate-stage4-1}
+
+\end{center}
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+
+\includegraphics[width=10.5in]{figs/v-annotate-stage4-2}
+\includegraphics[width=10.5in]{figs/ss-protein-alert-list}
+
+\end{center}
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+
 \begin{slide}
 \begin{center}
 \textbf{NCBI GenBank Indexers use BLAST}
@@ -661,7 +779,7 @@ Measles morbillivirus     &       17,233 & \emph{Paramyxoviridae}  \\ % 11234
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}
 \begin{center}
-\includegraphics[width=10.5in]{figs/vadr-paper-title}
+\includegraphics[width=10.5in]{figs/vadr-title-paper}
 \end{center}
 
 \small
