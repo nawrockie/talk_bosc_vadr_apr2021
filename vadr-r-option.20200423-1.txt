@@ -1,0 +1,215 @@
+EPN, Thu Apr 23 09:59:35 2020
+
+---------
+The problem:
+
+- Many incoming SARS-CoV-2 and other sequences (cox1) have stretches
+  of Ns in them. Often these stretches of Ns are the correct length
+  with respect to reference (presumably because they were added during
+  a reference-based assembly).
+
+- vadr/blast don't know what the Ns are supposed to be so homology
+  detection and alignment performance/accuracy breaks down. This leads
+  to various vadr errors (e.g. INDEFINITE_ANNOTATION)
+
+- Further, vadr throws errors if start/stop codons are Ns.
+
+- When a sequence has errors, the vadr output feature table gets
+  populated with misc_features or incorrect annotation versus what it
+  would have been IF the Ns were replaced by their expected nts.
+
+- Indexers (Linda, Vince, Susan) have to spend a lot of manual work to
+  get the annotation for these sequences and determine if they
+  pass/fail.
+
+- Of the 1204 SARS-CoV-2 seqs in GenBank as of 4/22/20, 93 have at
+  least one stretch of more than 100 Ns, 146 have at least one >= 50
+  Ns and 243 have a stretch of >= 10.
+  
+----------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------
+New -r option for replacing stretches of Ns:
+
+How it works:
+1. blastn is used to get the set of all compatible non-overlapping
+   hits versus the RefSeq (or consensus sequence for cox1).
+
+   input seq       xxxNNNxxxxxxxNNNNxxxxxxNNxxNNxxxxxxxxxxxxx
+   NC_045512    ---xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx----
+
+   blastn-hits     xxx   xxxxxxx    xxxxxx      xxxxxxxxxxxxx
+   NC_045512       xxx   xxxxxxx    xxxxxx      xxxxxxxxxxxxx
+
+   missing-regions    mmm       mmmm      mmmmmm
+   NC_045512          xxx       xxxx      xxxxxx
+
+2. Consider each missing region to see if it qualifies for replacing
+   Ns. It must satisfy the following 3 criteria:
+
+   A. missing sequence region must be at least 10 nt
+      (controllable with --r_minlen)
+
+   B. length missing sequence region must equal length of 
+      missing RefSeq region (model length)
+   
+   C. missing sequence region must be >= 50% Ns
+      (controllable with --r_minfract)
+
+3. For each missing region that qualifies, all Ns in the region are
+   replaced with the corresponding RefSeq/model nucleotide (only
+   possible because criteria B was satisfied).
+
+4. v-annotate.pl starts from the beginning as if the replaced
+   sequences were the input sequences, and performs all four stages:
+   classification, coverage determination, alignment and annotation,
+   and protein validation. 
+
+   Optionally, CDS and mature peptide-based errors (e.g. start/stop
+   codon) can be detected based on original input sequences with
+   --r_cdsmpo.
+
+5. Sequences in output files (e.g. per-feature fasta files, and
+   alignments) are fetched from the original input sequences, not the
+   replaced ones.
+
+Additional notes:
+- -r can be used in combination with -s, often speeding things up further
+  for SARS-CoV-2.
+
+- step 1 can be done using cmsearch instead of blastn with --r_prof,
+  although this doesn't seem to work as well for SARS-CoV-2 because
+  cmsearch is more likely to extend across stretches of Ns than is
+  blastn.
+
+---------
+
+
+
+
+
+
+
+
+--------
+How many sequences pass/fail?
+
+IGNORING LOW_SIMILARITY ERRORS:
+(these are common because of differences at the ends of the sequences
+that may or may not be artifacts)
+
+vadr mode|  testset     | num pass | num fail 
+---------|  ----------- | -------- | --------
+default  |  903-testset | 897      | 6
+-r       |  903-testset | 897      | 6
+-s       |  903-testset | 900      | 3  (LOW_SCORE errors go away b/c blastn replaces cmsearch)
+-s -r    |  903-testset | 900      | 3  (LOW_SCORE errors go away b/c blastn replaces cmsearch)
+
+vadr mode|  testset     | num pass | num fail 
+---------|  ----------- | -------- | --------
+default  |  301-testset | 200      | 101
+-r       |  301-testset | 290      |  11
+-s       |  301-testset | 200      | 101
+-s -r    |  301-testset | 290      |  11
+
+----------
+
+
+
+
+
+
+
+
+
+---------
+Timing results:
+
+As of 4/22/20, there were 1204 GenBank SARS-CoV-2 sequences listed
+in this file:
+
+https://bitbucket.ncbi.nlm.nih.gov/scm/vv/2019-ncov.git/ncov-sequences.yaml
+
+I broke them down into two sets for testing the -s option based on the
+longest stretch of Ns in each sequence
+- 903 (75%) of them do not have a stretch of more than 5 Ns
+- 301 (25%) of them have at least one stretch of more that 5 Ns
+
+vadr mode|  testset     | total time     | per sequence time
+---------|  ----------- | -------------- | -------------------
+default  |  903-testset | 4515 min total | 5 min/seq
+-r       |  903-testset | 4515 min total | 5 min/seq
+-s       |  903-testset |   23 min total | 1.5 sec/seq
+-s -r    |  903-testset |   24 min total | 1.6 sec/seq
+
+default  |  301-testset | 1505 min total |  5 min/seq
+-r       |  301-testset | 1505 min total |  5 min/seq
+-s       |  301-testset |  140 min total | 28 sec/seq
+-s -r    |  301-testset |    9 min total | 1.8 sec/seq ****
+
+default  | 1204-testset | 6020 min total | 5 min/seq
+-r       | 1204-testset | 6020 min total | 5 min/seq
+-s       | 1204-testset |  163 min total | 8 sec/seq
+-s -r    | 1204-testset |   33 min total | 1.7 sec/seq
+
+--------
+
+
+
+
+Commands:
+> cd /panfs/pan1/infernal/notebook/20_0423_vadr_foosh_scrum_update/example
+Look at example.fa
+> cat example.sh
+> sh example.sh
+Look at va-example/va-example.vadr.rpn
+> cat va-301.above5-rs.vadr.rpn | awk '{ print $8 }'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
