@@ -36,4 +36,10 @@
     add new vadr feature, new models or both in next vadr release
     (1.2.1)
 
+### Supporting the SPHERES community
+- VADR is portable and is run locally by labs prior to submission
+- weekly calls with CDC
+- docker container thanks to Curtis Kapsak and StaPH-B
+- Danny Park (MIT/Harvard) viral computational genomics group leader
+
 ###Acknowledgements
