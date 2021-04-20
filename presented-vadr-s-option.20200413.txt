@@ -1,0 +1,131 @@
+EPN, Mon Apr 13 11:15:51 2020
+
+JIRA ticket: FP-163
+
+---------
+The problem:
+
+- VADR was designed for viruses with 'small' genomes of < 20Kb. 
+  The longest genome I tested it during initial development for was
+  for Ebola (~19Kb).
+
+- v-annotate.pl calls cmalign which uses a secondary structure aware
+  global alignment algorithm that does not scale well to larger
+  sequences.
+
+- A single SARS-CoV-2 genome is 30Kb, and v-annotate.pl takes about 6
+  minutes to annotate it and requires up to 64 Gb of RAM.
+
+- This can be (and is) parallelized for multi-sequence inputs and so
+  far it hasn't been a big problem.
+
+- These high time and memory requirements will become a problem if we
+  start getting a lot more sequences.
+
+----------
+New -s option for acceleration of SARS-CoV-2 annotation:
+
+How it works:
+1. blastn is used to determine the max scoring hit between each input
+   sequence (to be annotated) and the NC_045512 RefSeq.
+
+2. The alignment of the maximum length ungapped region in that blastn
+   hit is considered a 'seed' for the alignment of the full sequence.
+
+   input seq     --xxxxxxxxxxxxxxx---
+   NC_045512    ---xxxxxxxxxxxxxxx------
+
+3. The sequence not covered by the seed alignment, along with 100 nt
+   overlap with the seed alignment, is aligned using cmalign (instead
+   of the full sequence):
+   
+   There are 5 possibilities for what cmalign has to align for each
+   input sequence of length L:
+
+  A) align 5'+3': the seed alignment is from input sequence positions x..y
+     where x != y and y != L
+
+  B) align 5' only: the seed alignment contains input sequence positions x..L
+     where x is != 1
+
+  C) align 3' only: the seed alignment contains input sequence positions 1..y
+     where y != L
+
+  D) align none: the seed alignment contains the full input sequence positions
+     1..L
+
+  E) align full: the seed alignment is less than 100nt, full sequence
+     needs to be aligned (just like without -s).
+
+4. the cmalign alignments of the 5' and/or 3' ends are joined with the
+   seed alignment to make the full alignment
+
+5. all downstream steps of v-annotate.pl including annotation
+   determination are performed as they usually are
+
+This works relatively well for SARS-CoV-2 in particular because a lot
+of input sequences are highly similar to the RefSeq (99% identical) so
+the seed alignments are full length or nearly full length.
+
+It works less well for sequences with stretches of Ns though, if they
+are long enough that the top blastn hit does not extend across them. I
+will try to address this issue separately in the near future.
+
+Thanks to Sergiy, available for Linda and Vince to test with
+
+$NCBI/bin/_latest/MSS/vadr/vadr_corona -s <fasta> <outdir>
+
+or
+
+$NCBI/bin/_latest/MSS/vadr/vadr_corona -s -p <fasta> <outdir>
+
+To use stable 'master' release (currently 1.0.6, no -s option):
+$NCBI/bin/vadr-annotate <options> <fasta> <outdir>
+
+---------
+
+Timing results:
+
+As of 4/12/20, there were 614 GenBank SARS-CoV-2 sequences listed
+in this file:
+
+https://bitbucket.ncbi.nlm.nih.gov/scm/vv/2019-ncov.git/ncov-sequences.yaml
+
+I broke them down into two sets for testing the -s option based on the
+longest stretch of Ns in each sequence
+- 487 of them do not have a stretch of more than 5 Ns
+- 127 of them have at least one stretch of more that 5 Ns
+
+vadr mode| testset     | total time     | per sequence time
+---------| ----------- | -------------- | -------------------
+default  | 487-testset | 2435 min total | 5 min/seq
+-s       | 487-testset |   16 min total | 2 sec/seq ~150X speed-up
+
+default  | 127-testset |  635 min total |  5 min/seq
+-s       | 127-testset |   52 min total | 25 sec/seq ~10X speed-up
+
+default  | 614-testset | 3070 min total | 5 min/seq
+-s       | 614-testset |   68 min total | 7 sec/seq ~45X speed-up
+
+--------
+
+Does annotation change?
+
+I haven't completed full testing, but here's an anecdotal but
+encouraging statistic:
+
+385/487 pass both default and -s with very strict parameters
+389 default
+387 -s 
+
+Of these 385, feature tables are identical between default and -s.
+
+There is less agreement for the 127 set, but those results should
+change significantly if we implement a strategy to deal with the
+stretches of Ns.
+
+I expect to be able to get the -s results nearly identical to default
+but won't focus on that until after I have something working for
+dealing with stretches of Ns since Linda is waiting on this.
+
+----------
