@@ -1,0 +1,6 @@
+Jan 2020:    33 seqs
+Feb 2020:    68 seqs
+Mar 2020:   335 seqs
+Apr 2020:  1546 seqs
+May 2020:  2994 seqs
+Jun 2020:  3416 seqs
