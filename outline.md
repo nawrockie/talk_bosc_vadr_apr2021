@@ -1,6 +1,6 @@
-##Validation and annotation of SARS-CoV-2 sequences using VADR
+## Validation and annotation of SARS-CoV-2 sequences using VADR
 
-###Introduction:
+### Introduction:
 - GenBank indexers handle incoming sequence submissions
 - VADR: screenshot of publication, brief overview
 - How VADR helps indexers by defining pass/fails
@@ -11,7 +11,7 @@
   * Stage 3: alignment/annotation and detected alerts
   * Stage 4: protein validation and detected alerts
 
-###SARS-CoV-2: 
+### SARS-CoV-2: 
 - timeline/num seqs in GenBank slide:
   * Jan 2020, VADR 1.0 speed (~3 min/seq)
 - slide explaining VADR 1.1 improvements  
@@ -26,7 +26,7 @@
 - timeline/num seqs in GenBank slide:
   * Jan-April 2021, VADR 1.2 speed (error-free (0.3 sec/seq) and error-rich seqs (1.0? sec/seq)
 
-###VADR model and accuracy improvements
+### VADR model and accuracy improvements
 - keeping up with mutants
   * B.1.1.7 model (Jan 2021)
   * ORF8 'expendable' (VADR 1.1.3 - date?)
