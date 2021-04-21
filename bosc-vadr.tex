@@ -355,4 +355,154 @@ SARS-CoV-2    & 1.12\%          & \emph{26.4\%}       \\
 \vfill
 \end{slide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\Large{\textbf{Sequence volume increase in 2021}}
+
+\includegraphics[width=10.5in]{figs/sars-counts-jan2020-apr2021-slide1}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\textbf{The glsearch program in the FASTA package does glocal
+  alignment quicker and in less memory than cmalign}
+\end{center}
+
+\begin{itemize}
+\item VADR 1.2 replaces cmalign with glsearch
+  \begin{itemize}
+  \item lower memory requirement opens door for multi-threading
+  \item input file is split into chunks
+    \begin{itemize}
+    \item each chunk processed independently in parallel on one of 8 CPUs
+    \item further reduces memory requirement (dependent on chunk size
+      instead of full input file size)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+  
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\Large{\textbf{VADR v1.2 is 5-10X faster than v1.1}}
+
+\includegraphics[width=10.5in]{figs/sars-counts-jan2020-apr2021-slide2}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\Large{\textbf{GenBank is now better prepared for upcoming onslaught of sequence submissions}}
+
+\includegraphics[width=10.5in]{figs/sars-counts-jan2020-apr2021-slide3}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\Large{\textbf{Besides getting faster, VADR has improved in other ways}}
+
+\begin{itemize}
+\item Jan  8, 2021: B.1.1.7 model
+\item Feb 12, 2021: VADR 1.1.3: more flexible to allow errors in ORF8 (or any
+  specified CDS) 
+\item Apr 12, 2021: B.1.525 model (49nt deletion that removes a stem loop)
+\end{itemize}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\Large{\textbf{We verify VADR passes new SARS-CoV-2 lineages}}
+
+\begin{itemize}
+\item screenshot or latex table showing 43 variants COV-226 and that
+  they all pass vadr (lineage name, mutlist, pass/fail)
+\end{itemize}
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\Large{\textbf{We actively support (and are supported by) the SPHERES community}}
+
+\includegraphics[width=8in]{figs/spheres-slack-apr132021}
+
+\begin{itemize}
+\item VADR is portable and is run locally by labs prior to submission
+\item docker container thanks to Curtis Kapsak and StaPH-B
+\item SPHERES members alert us of problems with VADR and model coverage
+\item We have weekly calls with CDC and receive questions and feature requests
+\end{itemize}
+
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+\begin{center}
+\Large{\textbf{Future improvements: VADR 1.2.1 TODO list}}
+
+\begin{itemize}
+\item Review list of seqs that fail VADR but should pass
+\item Review VADR error messages, and add parseable position data (SPHERES)
+\item Handling of non NNN start/stop codons that translate to X (CDC)
+\end{itemize}
+
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{slide}
+
+\large
+\begin{center}
+\large{\textbf{Acknowledgements}} \\
+
+\normalsize
+\vspace{0.75in}
+
+\small
+\begin{tabular}{l|l|l}
+%                  & \\ \hline
+%                  & \\
+\textbf{NCBI - viral annotation} & \textbf{NCBI - leadership} &  \textbf{Other} \\
+Alejandro Sch\"{a}ffer (now NCI) & David Landsman             & Sean Eddy (HMMER/Infernal/Easel)\\
+Rodney Brister                   & Kim Pruitt                 & Travis Wheeler (HMMER)\\
+Ilene Mizrachi                   & Jim Ostell                 & Tom Madden, Stephen Altschul, others (BLAST)\\
+Colleen Bollin                   & David Lipman               & William Pearson (FASTA/glsearch) \\
+Eneida Hatcher                   &                            & Michael Farrar (HMMER/glsearch) \\
+Linda Yankie                     &                            & \\
+Vincent Calhoun                  & \textbf{NLM - leadership}  & \\
+Beverly Underwood                & Patti Brennan              & \\
+Vasuki Gobu                      & Jerry Sheehan              &  \\
+Sergiy Gotvyanskyy               &                            & \\
+Alex Kotliarov                   &                            & \\
+Lara Shonkwiler                  & & \\
+Sophia Hu                        & & \\
+\end{tabular}
+
+\includegraphics[width=2.5in]{figs/NIH_NLM_ABRV_2C_4-white}
+\includegraphics[width=2.5in]{figs/ncbi-logo}
+
+\end{center}
+
+\vfill
+\end{slide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

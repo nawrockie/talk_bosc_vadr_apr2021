@@ -100,12 +100,15 @@ typical memory:      ~2G RAM
 max required memory: 64G RAM
 
 5K seqs = 10K secs =~ 3h; if 50 are error-prone, about 4h
+100K seqs = 20*4h = 80h =~ 4 days
 
 
 vadr 1.2:
 speed per few-error  seqs: 0.3sec/seq (8 threads,  7X speed-up, ~1000X total speedup
 speed per many-error seqs: 1.0sec/seq (8 threads, 60X speed-up)  ~300X total speedup
 max memory:   2G RAM per thread
+
+100K seqs = 99K * 0.3 sec = 29700 + 1K * 1sec = 30700 sec= 8.5h
 
 
 
