@@ -383,21 +383,25 @@ Norovirus     & 0.296\%         & 0.628\%             \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}
 \begin{center}
-\textbf{Speed and memory bottleneck in VADR 1.1 is cmalign}
+\large{\textbf{Speed and memory bottleneck in VADR 1.1 is cmalign}}
 \end{center}
 
 \begin{itemize}
-\item VADR 1.2 replaces cmalign with glsearch
+\item VADR 1.2 replaces cmalign with glsearch ('glocal' alignment)
   \begin{itemize}
-  \item lower memory requirement opens door for multi-threading
-  \item input file is split into chunks
-    \begin{itemize}
-    \item each chunk processed independently in parallel on one of 8 CPUs
-    \item further reduces memory requirement for large input files \\ (dependent on chunk size
-      instead of input file size)
-    \end{itemize}
+  \item lower memory requirement (2G max) opens door for multi-threading
+%  \item input file is split into chunks
+%    \begin{itemize}
+%    \item each chunk processed independently in parallel on one of 8 CPUs
+%    \item further reduces memory requirement for large input files \\ (dependent on chunk size
+%      instead of input file size)
+%    \end{itemize}
   \end{itemize}
 \end{itemize}
+
+\begin{center}
+\includegraphics[width=10.5in]{figs/vadr-1p2-multithreading}
+\end{center}
   
 \vfill
 \end{slide}
@@ -496,7 +500,7 @@ Norovirus     & 0.296\%         & 0.628\%             \\
 \begin{center}
 \large{\textbf{We actively support (and are helped by) the \\ SPHERES community}}
 
-\includegraphics[width=8in]{figs/spheres-slack-apr132021}
+\includegraphics[width=8.5in]{figs/spheres-slack-apr132021}
 
 \small
 \begin{itemize}
@@ -530,13 +534,16 @@ Norovirus     & 0.296\%         & 0.628\%             \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}
 \begin{center}
-\Large{\textbf{Future improvements: VADR 1.2.1 TODO list}}
+\large{\textbf{Future improvements: VADR 1.2.1 TODO list}}
 
-\small
+\normalsize
 \begin{itemize}
-\item Review list of seqs that fail VADR but should pass and make changes to code and/or models to accommodate them
+\item Review list of seqs that fail VADR but should pass
+  \begin{itemize}
+    \item make changes to code and/or models to accommodate them, if possible
+  \end{itemize}
 \item Review VADR error messages, and add parseable position data (SPHERES)
-\item Handling of non NNN start/stop codons that translate to X (CDC)
+\item Update handling of non NNN start/stop codons that translate to X (CDC)
 \end{itemize}
 
 \end{center}
